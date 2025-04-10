@@ -12,7 +12,7 @@ const AdminLayout = ({ children }: Props) => {
         <div className="min-h-screen bg-white flex">
             <aside className="w-64 bg-gray-800 text-white p-4">
                 <h2 className="text-xl font-bold mb-6">Espace Admin</h2>
-                <p>👤 {user?.username}</p>
+                <p>👤 {user?.name}</p>
             
                 <button onClick={logout} className="mt-6 bg-red-600 px-4 py-2 rounded">
                     Déconnexion
