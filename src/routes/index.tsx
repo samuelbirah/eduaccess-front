@@ -7,6 +7,7 @@ import { useAuth } from "../context/AuthContext"
 import { JSX } from "react"
 import StudentPage from "../pages/StudentPage"
 import EntryPage from "../pages/EntryPage"
+import RegisterPage from "../pages/RegisterPage"
 
 
 
@@ -36,6 +37,7 @@ const AppRoutes = () => {
                 <Route path="/" element={<EntryPage/>} />
                 <Route path="/home" element={<HomePage/>} />
                 <Route path="/login" element={<LoginPage/>} />
+                <Route path="/register" element={<RegisterPage/>} />
                 <Route path="/admin" element={<PrivateRoute element={<AdminDashboard />} allowedRoles={["ADMIN", "MANAGER"]} />} />
                 <Route path="/student" element={<PrivateRoute element={<StudentPage />} allowedRoles={["ADMIN", "STUDENT", "PARENT"]} />} />
                 <Route path="/*" element={<NotFoundPage/>} />

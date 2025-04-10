@@ -10,7 +10,7 @@ const PublicLayout = ({ children }: Props) => {
         <div className="min-h-screen bg-gray-50">
             <Navbar/>
 
-            <main className="p-6">
+            <main>
                 {children}
             </main>
 

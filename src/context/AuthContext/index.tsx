@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { loginUser } from "../../sevices/auth"
+import { loginUser, registerUser } from "../../sevices/auth"
 
 type User = {
     id: string
@@ -13,7 +13,9 @@ type AuthContextType = {
     user: User | null
     token: string | null
     login: (email: string, password: string) => Promise<void>
+    register: (name: string, email: string, password: string) => Promise<void>
     logout: () => void
+    signInWithGoogle: () => void
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -31,7 +33,26 @@ export const AuthProvider = ({ children }: {children: ReactNode}) => {
         setUser(JSON.parse(storedUser))
       }
     }, [])
-    
+
+    const register = async (name: string, email: string, password: string) => {
+        const { token, user } = await registerUser({ name, email, password })
+        setToken(token)
+        setUser(user)
+        localStorage.setItem("eduaccess-token", token)
+        localStorage.setItem("eduaccess-user", JSON.stringify(user))
+      
+        switch (user.role) {
+          case "ADMIN":
+            navigate("/admin")
+            break
+          case "STUDENT":
+            navigate("/student")
+            break
+          default:
+            navigate("/")
+        }
+      }
+   
 
     const login = async (email: string, password: string) => {
         const { token, user } = await loginUser({ email, password})
@@ -60,8 +81,13 @@ export const AuthProvider = ({ children }: {children: ReactNode}) => {
         navigate("/login")
     }
 
+    const signInWithGoogle = () => {
+        window.location.href = "http://localhost:5000/api/auth/google" // 🔁 Change l'URL selon ton backend
+      }
+      
+
     return (
-        <AuthContext.Provider value={{ user, token, login, logout }}>
+        <AuthContext.Provider value={{ user, token, login, register, logout, signInWithGoogle }}>
             {children}
         </AuthContext.Provider>
     )
