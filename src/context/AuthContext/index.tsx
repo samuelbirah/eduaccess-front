@@ -12,6 +12,7 @@ type User = {
 type AuthContextType = {
     user: User | null
     token: string | null
+    isLoading: boolean
     login: (email: string, password: string) => Promise<void>
     register: (name: string, email: string, password: string) => Promise<void>
     logout: () => void
@@ -23,15 +24,21 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export const AuthProvider = ({ children }: {children: ReactNode}) => {
     const [user, setUser] = useState<User | null>(null)
     const [token, setToken] = useState<string | null>(null)
+    const [isLoading, setIsLoading] = useState(true)
     const navigate = useNavigate()
 
     useEffect(() => {
       const storedUser = localStorage.getItem("eduaccess-user")
       const storedToken = localStorage.getItem("eduaccess-token")
+
       if (storedToken && storedUser) {
         setToken(storedToken)
         setUser(JSON.parse(storedUser))
+        console.log("Stored User:", storedUser);
+        console.log("Stored Token:", storedToken);
       }
+
+      setIsLoading(false)
     }, [])
 
     const register = async (name: string, email: string, password: string) => {
@@ -87,7 +94,7 @@ export const AuthProvider = ({ children }: {children: ReactNode}) => {
       
 
     return (
-        <AuthContext.Provider value={{ user, token, login, register, logout, signInWithGoogle }}>
+        <AuthContext.Provider value={{ user, token, isLoading, login, register, logout, signInWithGoogle }}>
             {children}
         </AuthContext.Provider>
     )
